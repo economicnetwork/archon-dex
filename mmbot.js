@@ -9,7 +9,6 @@ var client = redis.createClient();
 
 var pair = "TM-WETH";
 
-/*
 var orderPromise = mom.listorders(pair);
 orderPromise.then(function(result) {
     console.log("openorders " + result);
@@ -19,9 +18,9 @@ orderPromise.then(function(result) {
     client.set(key, result, redis.print); 
 
     client.quit();
-});*/
+});
 
-/*var symbol = "WETH";
+var symbol = "WETH";
 mom.balance(symbol).then(function(result){
     console.log(result);
 })
@@ -29,30 +28,10 @@ mom.balance(symbol).then(function(result){
 mom.trades(pair).then(function(result){
     console.log("trades " + result);
 })
-*/
 
 mom.cancelorders(pair);
-
-/*
-mom.balance();
-mom.trades();
-*/
 
 //mom.list_markets();
 
 //mom.cancelorders();
 
-/*
-var amount = 8000;
-var price = 0.000033
-mom.placeOrder(amount, price);
-
-var amount = 8000;
-var price = 0.000028
-mom.placeOrder(amount, price);
-
-var amount = 8000;
-var price = 0.000026
-mom.placeOrder(amount, price);
-
-*/
