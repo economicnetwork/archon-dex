@@ -4,7 +4,7 @@ trading on mom
 https://docs.tokenmom.com/
 
 set privatekey with
-export PRIVATEKEY=0x1xxxx
+export PRIVATEKEY='0x1...';
 
 */
 const superagent = require('superagent');
@@ -29,12 +29,16 @@ function getAuth (){
     return [Auth, Address];
 }
 
- function placeOrder(amount, price){
-   [Auth, Address] = getAuth();
-      
-   var pair = "TM-WETH";
-   var trade_type = "buy";
 
+function logOrder(amount, price, pair, trade_type){
+    console.log("log order " + amount + " " + price + " " + pair  + " " + trade_type);
+}
+
+ function placeOrder(amount, price, pair, trade_type){
+    console.log("place order " + amount + " " + price + " " + pair  + " " + trade_type);
+   [Auth, Address] = getAuth();
+
+   
    superagent
    .post(base_url + "order/build_order") 
    .send({ "market_id": pair, "trade": trade_type, "price": price,"amount": amount})
@@ -43,11 +47,12 @@ function getAuth (){
    .set('Accept', 'application/json')
    .then(res => {
       var r = res.text;
+      console.log("result build order " + r);
       var j = JSON.parse(r);
       var orderhash = j.result.orderHash;      
       //console.log('order hash: ' + orderhash);
       
-      [NewAuth, Address] = mom.getAuth();
+      [NewAuth, Address] = getAuth();
       superagent
       .post(base_url + "order/place_order") 
       .send({ "order_hash" : orderhash, "signature": Auth})
@@ -55,7 +60,7 @@ function getAuth (){
       .set("tm-auth",NewAuth)
       .set('Accept', 'application/json')
       .then(res => {
-         console.log(res);
+         console.log(res.body);
       })
    
    });   
@@ -120,17 +125,8 @@ function trades(pair){
     });
 }
 
-
-function list_markets(){
-    superagent
-    .get(base_url + "market/get_markets")   
-    .set('Accept', 'application/json')
-    .then(res => {
-        console.log('markets : ' + JSON.stringify(res.body));
-    });
-}
-
 function cancel_order(oid){   
+    console.log("cancel " + oid);
     [Auth, Address] = getAuth();
     
     return new Promise(function(resolve, reject) {
@@ -157,17 +153,20 @@ function cancelorders(pair){
     console.log("cancel orders");
     [Auth, Address] = getAuth();
 
+    //var mypairs = ["BAT-WETH" , "CVC-WETH", "DNT-WETH", "REP-WETH"];
+    var pair = "BAT-WETH";
     var orderPromise = this.listorders(pair);
     orderPromise.then(function(result) {
         //console.log('open orders: ' + JSON.stringify(result));
         console.log('open orders: ' + result);
-
-        var oo = JSON.parse(result);
-        console.log('open orders: ' + oo);
+        var oo = result;
+        //var oo = JSON.parse(result);
+        console.log('got open orders: ' + oo);
 
         for (var i = 0; i <oo.length; i++){
-            var o = oo[i];
             console.log("order " + o);
+
+            var o = oo[i];
             var oid = o["id"];
             console.log("cancel " + oid);
 
@@ -175,6 +174,33 @@ function cancelorders(pair){
                        
         }
     });          
+}
+
+// public
+
+function list_markets(){
+    superagent
+    .get(base_url + "market/get_markets")   
+    .set('Accept', 'application/json')
+    .then(res => {
+        console.log('markets : ' + JSON.stringify(res.body));
+    });
+}
+
+//TODO paging
+function trade_history(pair){
+    //endpoint = "+"&page="+str(page)
+    return new Promise(function(resolve, reject) {
+        superagent
+        .get(base_url + "market/get_trades?market_id="+pair)   
+        .set('Accept', 'application/json')
+        .then(res => {
+            var j = res.body;
+            var x = JSON.stringify(j.trades);
+            resolve(x);
+
+        });
+    });
 }
 
 
@@ -185,6 +211,8 @@ module.exports.cancelorders = cancelorders;
 module.exports.balance = balance;
 module.exports.placeOrder = placeOrder;
 module.exports.list_markets = list_markets;
+module.exports.trade_history = trade_history;
+module.exports.logOrder = logOrder;
 
 
 /*
