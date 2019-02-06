@@ -7,6 +7,7 @@ set privatekey with
 export PRIVATEKEY='0x1...';
 
 */
+
 const superagent = require('superagent');
 
 base_url = "https://api.tokenmom.com/";
@@ -29,12 +30,11 @@ function getAuth (){
     return [Auth, Address];
 }
 
-
 function logOrder(amount, price, pair, trade_type){
     console.log("log order " + amount + " " + price + " " + pair  + " " + trade_type);
 }
 
- function placeOrder(amount, price, pair, trade_type){
+function placeOrder(amount, price, pair, trade_type){
     console.log("place order " + amount + " " + price + " " + pair  + " " + trade_type);
    [Auth, Address] = getAuth();
 
@@ -61,9 +61,18 @@ function logOrder(amount, price, pair, trade_type){
       .set('Accept', 'application/json')
       .then(res => {
          console.log(res.body);
+         //TODO return result
       })
    
    });   
+}
+
+function placeBuyOrder(amount, price, pair){
+    return placeOrder(amount, price, pair, "buy");
+}
+
+function placeSellOrder(amount, price, pair){
+    return placeOrder(amount, price, pair, "sell");
 }
 
 function balance(symbol){
@@ -85,7 +94,6 @@ function balance(symbol){
         });
     });
 }
-
 
 function listorders(pair){
     [Auth, Address] = getAuth();
@@ -148,7 +156,6 @@ function cancel_order(oid){
     });
 }
 
-
 function cancelorders(pair){
     console.log("cancel orders");
     [Auth, Address] = getAuth();
@@ -175,6 +182,22 @@ function cancelorders(pair){
         }
     });          
 }
+
+function showHistory(pair){    
+    trade_history(pair).then(function(result){
+        
+        var x = JSON.parse(result);
+        //console.log(x);
+        
+        for (var i = 0; i < x.length; i++){
+            p = x[i].price
+            a = x[i].amount;
+            u = x[i].updated_at;
+            console.log(p + " " + a + " " + u);
+        }
+    })    
+}
+
 
 // public
 
@@ -204,15 +227,19 @@ function trade_history(pair){
 }
 
 
+
 module.exports.cancel_order = cancel_order;
 module.exports.trades = trades;
 module.exports.listorders = listorders;
 module.exports.cancelorders = cancelorders;
 module.exports.balance = balance;
 module.exports.placeOrder = placeOrder;
+module.exports.placeBuyOrder = placeBuyOrder;
+module.exports.placeSellOrder = placeSellOrder;
 module.exports.list_markets = list_markets;
 module.exports.trade_history = trade_history;
 module.exports.logOrder = logOrder;
+module.exports.showHistory = showHistory;
 
 
 /*
