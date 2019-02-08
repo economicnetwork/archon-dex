@@ -1,8 +1,18 @@
 # archon dex
 
-basic client to trade with tokenmom (other relayers later)
+basic client to trade with relays
 
-## install
+## Radarrelay
+
+...
+
+## Paradex
+
+...
+
+## tokenmom 
+
+* install
 
 ```
 git clone git@github.com:economicnetwork/archon-dex.git
