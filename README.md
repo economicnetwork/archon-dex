@@ -4,13 +4,20 @@ basic client to trade with relays
 
 ## Radarrelay
 
-...
+* submit order
+* TODO: cancel order, get orderbook, balance
+
+## DDEX
+
+TODO
 
 ## Paradex
 
-...
+TODO
 
 ## tokenmom 
+
+Javascript
 
 * install
 

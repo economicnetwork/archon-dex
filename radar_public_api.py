@@ -1,6 +1,7 @@
+"""
+radar public API
+"""
 import requests
-
-# ------------ public ------------
 
 base_url = "https://api.radarrelay.com/v2/"
   
@@ -23,7 +24,6 @@ def stats(pair):
     endpoint = "markets/%s/stats"%(pair)
     #print (endpoint)
     r = requests.get(base_url + endpoint)
-    #print (r)
     ticker = r.json()
     #print (ticker)
     v = ticker["volume24Hour"]
