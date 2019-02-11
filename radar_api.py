@@ -1,4 +1,7 @@
 """
+radar API client
+API docs https://developers.radarrelay.com/feed-api/v2/
+
 TODO
 cancel
 get-orderbook
@@ -72,4 +75,5 @@ def prepare_order(order):
     js_order = order_to_jsdict(order_struct)
     js_order["exchangeAddress"] = exchangeAddress
     return js_order
+
 
