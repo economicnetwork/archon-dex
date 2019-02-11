@@ -31,4 +31,5 @@ def bal():
     print (r.text)
     
 if __name__=='__main__':    
-    markets()
+    #markets()
+    bal()
