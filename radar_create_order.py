@@ -37,15 +37,14 @@ def request_order():
   exp = str(int(time.time()+day))
   r = requests.post(base_url + "markets/REP-WETH/order/limit", json = {"type": "BUY","quantity": "1","price": "0.055","expiration": exp})
   order = r.json()
-  print (order)
   myaddr = (acct.address).lower()
   order["makerAddress"] = myaddr
+  print (order)
   #print ("order ",order)
   return order
 
 def sign_order(order):
     order_hash = "0x" + generate_order_hash_hex(order, exchangeAddress)
-    print ("order_hash ",order_hash)
     orderhash_bytes = hexstring_to_bytes(order_hash)
     msg = orderhash_bytes
     message_hash = defunct_hash_message(primitive=msg)
@@ -73,7 +72,7 @@ def submit_order():
   # [{"field":"makerAssetData","code":1001,"reason":"Incorrect format (Invalid value)"},
   # {"field":"takerAssetData","code":1001,"reason":"Incorrect format (Invalid value)"}]}
     
-def submit_example():    
+def get_order():
     example_order = {
              'makerAddress': "0x0000000000000000000000000000000000000000",
              'takerAddress': "0x0000000000000000000000000000000000000000",
@@ -89,15 +88,24 @@ def submit_example():
              'takerAssetData': "0x0000000000000000000000000000000000000000",
              'exchangeAddress': "0x0000000000000000000000000000000000000000",
     }
-    print (example_order)
-    order_struct = jsdict_order_to_struct(example_order)    
+    return example_order
+
+def submit_example():    
+    #order = get_order()
+    order = request_order()
+    order_struct = jsdict_order_to_struct(order)    
+    print (order_struct)
     sig = sign_order(order_struct)
-    js_order["signature"] = sig
-    js_order = order_to_jsdict(order)
+    order_struct["signature"] = sig
+    js_order = order_to_jsdict(order_struct)
     print (js_order)
+    print ("submitting !!! >>>>>> ", js_order)
+    response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
+    print (response.text)
     #jsdict["makerAssetData"] = "0x" + order["makerAssetData"].hex()
 
 if __name__=='__main__':
     #request_order()
     submit_example()
+    #request_order()
 
