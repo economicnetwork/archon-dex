@@ -6,30 +6,50 @@ export INFURA_KEY='...';
 
 from radar_api import *
 import requests
+import json
+from web3 import Web3, HTTPProvider
+
+privateKey = os.environ['PRIVATEKEY']
+INFURA_KEY = os.environ['INFURA_KEY']
+
+w3 = Web3(HTTPProvider("https://mainnet.infura.io/" + INFURA_KEY))
+acct = w3.eth.account.privateKeyToAccount(privateKey)
+myaddr = (acct.address).lower()
+print (myaddr)
+
+def show_orders():
+    orders = get_orders(address = myaddr)
+        
+    for o in orders:
+        print (o["state"])
+
 
 def submit_example():
-    price = 0.0008
+    price = 0.0006042
     qty = 10
     #pair = "REP-WETH"
     symbol = "BAT"
     order = request_order(symbol, price, qty)
-    js_order = prepare_order(order)    
+    js_order = prepare_order(acct, order)    
     print ("submitting >>>> ", js_order)
-    response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
+    #response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
     #response is empty
-    print (response)
+    #print (response)
 
+    """
     symbol = "REP"
-    price = 0.08
+    price = 0.05042
     qty = 1
     order = request_order(symbol, price, qty)
-    js_order = prepare_order(order)    
+    js_order = prepare_order(acct, order)    
     print ("submitting >>>> ", js_order)
     response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
     #response is empty
     print (response)
+    """
     
 
     
 if __name__=='__main__':
-    submit_example()
+    #submit_example()
+    show_orders()

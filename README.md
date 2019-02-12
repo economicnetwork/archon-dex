@@ -7,6 +7,8 @@ basic client to trade with relays
 * submit order
 * TODO: cancel order, get orderbook, balance
 
+requirements: TODO (pymaker, zerox utils, web3py)
+
 ## DDEX
 
 TODO
