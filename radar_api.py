@@ -41,6 +41,11 @@ def get_orders(address):
     orders = json.loads(response.text)
     return orders
 
+def get_fills(address):
+    response = requests.get("%s/accounts/%s/fills"%(base_url,address))
+    fills = json.loads(response.text)
+    return fills
+    
 
 def bytes_to_hexstring(value) -> str:
     if isinstance(value, bytes) or isinstance(value, bytearray):

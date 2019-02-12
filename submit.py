@@ -17,11 +17,18 @@ acct = w3.eth.account.privateKeyToAccount(privateKey)
 myaddr = (acct.address).lower()
 print (myaddr)
 
-def show_orders():
+def show_maker_fills():
+    fills = get_fills(address = myaddr)
+    maker_fills = list(filter(lambda x: x["makerAddress"]==myaddr,fills))
+    for fill in maker_fills:
+        print (fill)
+
+def show_open_orders():
     orders = get_orders(address = myaddr)
-        
-    for o in orders:
-        print (o["state"])
+    open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
+
+    for o in open_orders:
+        print (o)
 
 
 def submit_example():
@@ -52,4 +59,5 @@ def submit_example():
     
 if __name__=='__main__':
     #submit_example()
-    show_orders()
+    #show_open_orders()
+    show_maker_fills()
