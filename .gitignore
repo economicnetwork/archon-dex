@@ -3,3 +3,4 @@ node_modules/
 keys.txt
 __pycache__
 log/
+pythonpath.sh

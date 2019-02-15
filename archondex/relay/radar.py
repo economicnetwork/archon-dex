@@ -74,12 +74,12 @@ def to_vrs(signature: str) -> Tuple[int, bytes, bytes]:
 
     return v, r, s
 
-def request_order(symbol, price, qty):  
+def request_order(otype, symbol, price, qty):  
   day = 24*60*60
   exp = str(int(time.time()+day))
   
   #TODO rounding
-  order_data = {"type": "BUY","quantity": str(qty), "price": str(price),"expiration": exp}  
+  order_data = {"type": otype,"quantity": str(qty), "price": str(price),"expiration": exp}  
   base = "WETH"
   pair = symbol + "-" + base
   r = requests.post(base_url + "markets/" + pair + "/order/limit", json = order_data)

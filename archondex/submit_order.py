@@ -17,6 +17,8 @@ acct = w3.eth.account.privateKeyToAccount(privateKey)
 myaddr = (acct.address).lower()
 print (myaddr)
 
+tokens = {"0x1985365e9f78359a9b6ad760e32412f4a445e862":"REP","0x0d8775f648430679a709e98d2b0cb6250d2887ef":"BAT"}
+
 def show_maker_fills():
     fills = get_fills(address = myaddr)
     maker_fills = list(filter(lambda x: x["makerAddress"]==myaddr,fills))
@@ -28,24 +30,26 @@ def show_open_orders():
     open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
 
     for o in open_orders:
-        print (o)
+        bt = o["baseTokenAddress"]
+        s = tokens[bt]
+        print (s,":",o["type"],o["price"])
 
 
 def submit_example():
-    price = 0.0006042
+    price = 0.0008042
     qty = 10
     #pair = "REP-WETH"
     symbol = "BAT"
     order = request_order(symbol, price, qty)
     js_order = prepare_order(acct, order)    
     print ("submitting >>>> ", js_order)
-    #response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
+    response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
     #response is empty
-    #print (response)
-
-    """
+    print (response)
+        
+    
     symbol = "REP"
-    price = 0.05042
+    price = 0.09042
     qty = 1
     order = request_order(symbol, price, qty)
     js_order = prepare_order(acct, order)    
@@ -53,11 +57,11 @@ def submit_example():
     response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
     #response is empty
     print (response)
-    """
+    
     
 
     
 if __name__=='__main__':
     #submit_example()
-    #show_open_orders()
-    show_maker_fills()
+    show_open_orders()
+    #show_maker_fills()
