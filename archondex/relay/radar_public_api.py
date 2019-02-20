@@ -17,6 +17,22 @@ def market_ticker():
     ticker = r.json()
     print (ticker)
 
+def orderbook(pair): 
+    endpoint = "markets/%s/book"%pair
+    r = requests.get(base_url + endpoint)
+    book = r.json()
+    return book
+    
+def show_orderbook(pair):  
+    book = orderbook(pair)
+    bids,asks = book["bids"],book["asks"]
+    print ("orderbook %s "%pair)
+    for b in bids:
+        print (b['price'])
+    print ('****')
+    for a in asks:
+        print (a['price'])
+
 def stats(pair):    
     #pair = "ZRX-WETH"
     page=str(2)
@@ -28,3 +44,4 @@ def stats(pair):
     #print (ticker)
     v = ticker["volume24Hour"]
     print ("%s volume %s"%(pair,v))
+

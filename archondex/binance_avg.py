@@ -14,9 +14,9 @@ a.set_keys_exchange_file()
 client = a.afacade.get_client(exc.BINANCE)
 
 import redis
-r = redis.Redis(host='localhost', port=6379, db=0)
 
 def get_average(token):
+    #r = redis.Redis(host='localhost', port=6379, db=0)
     market = models.market_from(token,"ETH")
     candles = a.afacade.get_candles_minute(market,exc.BINANCE)
     closes = [float(x[4]) for x in candles]
@@ -25,19 +25,19 @@ def get_average(token):
     k = market + "_avg"
     print (token,":",avg)
 
-    #return avg
-    #r.set(token, json.dumps({"avg":avg}))
-    r.set(token, json.dumps(avg))
+    #r.set(token, json.dumps(avg))
     return avg
 
-#get_average("REP")
-syms = ["USDC", "TUSD", "BAT", "CVC", "DNT", "LOOM", "MANA", "REP"]
-avgs = {}
-for s in syms:
-    try:
-        avg = get_average(s)
-        avgs[avg] = avg
-    except:
-        pass
+def set_averages():
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    #get_average("REP")
+    syms = ["USDC", "TUSD", "BAT", "CVC", "DNT", "LOOM", "MANA", "REP"]
+    avgs = {}
+    for s in syms:
+        try:
+            avg = get_average(s)
+            avgs[avg] = avg
+        except:
+            pass
 
-print (avgs)
+    print (avgs)

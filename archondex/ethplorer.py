@@ -13,7 +13,12 @@ def get_balance(address):
     for t in tokens:
         s = t["tokenInfo"]["symbol"]
         b = float(t["balance"])/10**18
-        balances[s] = b
+
+        #TODO more generic
+        if s == "USDC" or s == "CVC":
+            balances[s] = b*10**12
+        else:
+            balances[s] = b
     
     return balances
 

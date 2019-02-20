@@ -4,3 +4,6 @@ keys.txt
 __pycache__
 log/
 pythonpath.sh
+*.priv
+*.json
+
