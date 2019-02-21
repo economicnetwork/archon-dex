@@ -41,11 +41,25 @@ def get_orders(address):
     orders = json.loads(response.text)
     return orders
 
-def get_fills(address):
-    response = requests.get("%s/accounts/%s/fills"%(base_url,address))
+def get_fills_page(address, page):
+    params = {"perPage": 100, "page": page}
+    response = requests.get("%s/accounts/%s/fills"%(base_url,address),params=params)
+    #print (response.text)    
+    #page perPage
     fills = json.loads(response.text)
     return fills
-    
+
+def get_fills(address):
+    fills = list()
+    for i in range(0,10):
+        #params = {"perPage": 100}
+        fills_page = get_fills_page(address, i)
+        if len(fills_page)>0:
+            fills += fills_page
+        else:
+            break
+    return fills
+
 
 def bytes_to_hexstring(value) -> str:
     if isinstance(value, bytes) or isinstance(value, bytearray):
