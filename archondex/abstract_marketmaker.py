@@ -34,6 +34,62 @@ class Marketmaker:
         [otype, symbol, price, qty] = order
         response = radar.submit_order(self.acct, order)
         print (response)
+
+    def submit_buy_band(self, symbol, pair, zq, bin_avg_price, binance_band, target_bal_eth, max_bal = 1.0):
+        """ submit bid based on midprice, but check band on CEX (binance) in case midprice is out of place """
+        print ("submit_buy")
+
+        sym_bal = self.balances[symbol]
+        
+        #from midprice        
+        
+        book = radar_public.orderbook(pair)
+        topbid = float(book["bids"][0]['price'])
+        topask = float(book["asks"][0]['price'])
+        midprice = (topbid+topask)/2
+        print ("best bid",topbid)
+        print ("best ask", topask)
+        print ("midprice ",midprice)
+
+        eth_bal = sym_bal * bin_avg_price
+        print ("balance ",symbol,sym_bal,"  ",eth_bal)
+
+        
+        if eth_bal > max_bal:
+            print ("high inventory. don't submit")
+            return
+        
+        #pip = 0.000001
+        #target_price = topask - pip
+        
+        target_price = midprice * (1 - zq)
+        from_bin = target_price/bin_avg_price -1
+        print ("binance avg ",symbol,":",bin_avg_price)
+        print ("midrice ",midprice)
+        print (" >> target: ",target_price)
+        if from_bin > binance_band:
+            print ("bid too high")
+            newzq = 0.1
+            #target_price = bin_avg_price * (1 - zq)
+            #print ("new ",target_price)
+
+        elif from_bin < -binance_band:
+            print ("bid too low from binance. midprice not indicative",from_bin)
+            #target now 
+            #newzq = 0.1
+            #target_price = bin_avg_price * (1 - newzq)
+            #print ("new ",target_price)
+
+        else:
+            #print ("from_bin ",from_bin)
+            #avg_price * (1-zq)
+            
+            qty = round(target_bal_eth/target_price,0)
+            otype = "BUY"
+            order = [otype, symbol, target_price, qty]
+            print (order)
+            #self.submit_order(order)
+
         
     def show_maker_fills(self):
         fills = radar.get_fills(address = self.myaddr)
@@ -41,6 +97,9 @@ class Marketmaker:
         for fill in maker_fills:
             print (fill)
     
+    def fetch_balances(self):
+        self.balances = get_balance(self.myaddr)        
+
     def show_bal(self):
         bal = get_balance(self.myaddr)        
         for k,v in bal.items():
