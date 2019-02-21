@@ -27,16 +27,12 @@ class Marketmaker:
         self.w3 = Web3(HTTPProvider("https://mainnet.infura.io/" + INFURA_KEY))
         self.acct = self.w3.eth.account.privateKeyToAccount(privateKey)
         self.myaddr = (self.acct.address).lower()
-        print (self.myaddr)
+        print ("using address ",self.myaddr)
 
     def submit_order(self, order): 
         print ("submit order ",order)
         [otype, symbol, price, qty] = order
-        order = radar.request_order(otype, symbol, price, qty)
-        js_order = radar.prepare_order(self.acct, order)    
-        print ("submitting >>>> ", js_order)
-        response = requests.post("https://api.radarrelay.com/v2/orders", js_order, timeout=10.0)
-        #response is empty
+        response = radar.submit_order(self.acct, order)
         print (response)
         
     def show_maker_fills(self):

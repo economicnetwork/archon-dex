@@ -125,6 +125,16 @@ def prepare_order(acct, order):
     js_order["exchangeAddress"] = exchangeAddress
     return js_order
 
+def submit_order(acct, order):
+    print ("submit ",order)
+    [otype, symbol, price, qty] = order
+    dict_order = request_order(otype, symbol, price, qty) 
+    js_order = prepare_order(acct, dict_order)    
+    print ("submitting >>>> ", js_order)
+    response = requests.post(base_url + "orders", js_order, timeout=10.0)
+    #response is empty
+    return response
+
 """
 #WIP
 
