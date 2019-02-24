@@ -1,0 +1,8 @@
+0x-contract-addresses
+0x-contract-artifacts
+0x-json-schemas
+0x-web3
+eth-abi
+eth_utils
+hypothesis>=3.31.2
+mypy_extensions
