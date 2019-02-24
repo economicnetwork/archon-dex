@@ -8,8 +8,8 @@ import archondex.relay.radar_public_api as radar_public
 import archondex.relay.radar as radar
 import archondex.binance_avg as binance
 from archondex.ethplorer import get_balance
-from tokens import *
-from config_assets import asset_syms
+from archondex.tokens import *
+from archondex.config_assets import asset_syms
 
 import requests
 import json
