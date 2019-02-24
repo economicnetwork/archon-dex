@@ -35,6 +35,19 @@ class Marketmaker:
         response = radar.submit_order(self.acct, order)
         print (response)
 
+    def submit_buy(self, symbol, pair, target_price, qty):
+        otype = "BUY"
+        order = [otype, symbol, target_price, qty]
+        print (order)
+        self.submit_order(order)
+
+    def submit_sell(self, symbol, pair, target_price, qty):
+        otype = "SELL"
+        order = [otype, symbol, target_price, qty]
+        print (order)
+        self.submit_order(order)
+
+
     def submit_buy_band(self, symbol, pair, zq, bin_avg_price, binance_band, target_bal_eth, max_bal = 1.0):
         """ submit bid based on midprice, but check band on CEX (binance) in case midprice is out of place """
         print ("submit_buy")
@@ -89,6 +102,61 @@ class Marketmaker:
             order = [otype, symbol, target_price, qty]
             print (order)
             #self.submit_order(order)
+
+    def submit_sell_band(self, symbol, pair, zq, bin_avg_price, binance_band):
+        """ submit ask based on midprice, but check band on CEX (binance) in case midprice is out of place """
+        print ("submit sell")
+
+        sym_bal = self.balances[symbol]
+        
+        #from midprice        
+        
+        book = radar_public.orderbook(pair)
+        topbid = float(book["bids"][0]['price'])
+        topask = float(book["asks"][0]['price'])
+        midprice = (topbid+topask)/2
+        print ("best bid",topbid)
+        print ("best ask", topask)
+        print ("midprice ",midprice)
+
+        eth_bal = sym_bal * bin_avg_price
+        print ("balance ",symbol,sym_bal,"  ",eth_bal)
+
+        #pip = 0.000001
+        #target_price = topask - pip
+        
+        target_price = midprice * (1 + zq)
+        from_bin = target_price/bin_avg_price -1
+        print ("binance avg ",symbol,":",bin_avg_price)
+        print ("midrice ",midprice)
+        print (" >> target: ",target_price)
+        if from_bin > binance_band:
+            print ("bid too high")
+            target_price = bin_avg_price * (1 + zq)
+            qty = (1 - 0.01) * sym_bal
+            otype = "SELL"
+            order = [otype, symbol, target_price, qty]
+            print (order)
+            self.submit_order(order)            
+
+        elif from_bin < -binance_band:
+            print ("bid too low from binance. midprice not indicative",from_bin)
+            target_price = bin_avg_price * (1 + zq)
+            qty = (1 - 0.01) * sym_bal
+            otype = "SELL"
+            order = [otype, symbol, target_price, qty]
+            print (order)
+            self.submit_order(order)            
+
+        else:
+            #print ("from_bin ",from_bin)
+            #avg_price * (1-zq)
+            
+            qty = sym_bal
+            otype = "SELL"
+            order = [otype, symbol, target_price, qty]
+            print (order)
+            self.submit_order(order)            
 
         
     def show_maker_fills(self):
