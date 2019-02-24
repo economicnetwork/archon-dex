@@ -170,11 +170,13 @@ class Marketmaker:
     
     def fetch_balances(self):
         self.balances = get_balance(self.myaddr)        
+        return self.balances
 
-    def fetch_order(self):
+    def fetch_orders(self):
         orders = radar.get_orders(address = self.myaddr)
         #print (orders)
         self.open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
+        return self.open_orders
          
 
     def show_bal(self):
