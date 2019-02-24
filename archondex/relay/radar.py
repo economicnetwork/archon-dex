@@ -14,8 +14,6 @@ submit order to radar with web3py and infura
 #from zero_ex.order_utils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
 from archondex.zerox.orderutils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
 
-import zero_ex.order_utils as u
-print (u,u.__file__)
 
 #from pymaker.sign import to_vrs
 #from pymaker.util import bytes_to_hexstring, hexstring_to_bytes, http_response_summary
@@ -27,7 +25,7 @@ from eth_abi import encode_single, encode_abi, decode_single
 
 import requests
 from typing import cast, Dict, NamedTuple, Tuple
-from solc import compile_source
+#from solc import compile_source
 
 import os
 import copy
