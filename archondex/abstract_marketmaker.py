@@ -178,6 +178,11 @@ class Marketmaker:
         self.open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
         return self.open_orders
          
+    def fetch_tx(self):
+        fills = radar.get_fills(address = myaddr)
+        #maker_fills = list(filter(lambda x: x["makerAddress"]==myaddr,fills))
+        #taker_fills = list(filter(lambda x: x["makerAddress"]!=myaddr,fills))   
+        return fills
 
     def show_bal(self):
         bal = get_balance(self.myaddr)        
