@@ -29,6 +29,9 @@ class Marketmaker:
         self.myaddr = (self.acct.address).lower()
         print ("using address ",self.myaddr)
 
+        self.open_orders = list()
+        self.balances = None
+
     def submit_order(self, order): 
         print ("submit order ",order)
         [otype, symbol, price, qty] = order
@@ -166,8 +169,20 @@ class Marketmaker:
             print (fill)
     
     def fetch_balances(self):
-        self.balances = get_balance(self.myaddr)
+        self.balances = get_balance(self.myaddr)        
         return self.balances
+
+    def fetch_orders(self):
+        orders = radar.get_orders(address = self.myaddr)
+        #print (orders)
+        self.open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
+        return self.open_orders
+         
+    def fetch_tx(self):
+        fills = radar.get_fills(address = self.myaddr)
+        #maker_fills = list(filter(lambda x: x["makerAddress"]==myaddr,fills))
+        #taker_fills = list(filter(lambda x: x["makerAddress"]!=myaddr,fills))   
+        return fills
 
     def show_bal(self):
         bal = get_balance(self.myaddr)        
