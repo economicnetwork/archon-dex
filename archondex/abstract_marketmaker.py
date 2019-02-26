@@ -8,8 +8,8 @@ import archondex.relay.radar_public_api as radar_public
 import archondex.relay.radar as radar
 import archondex.binance_avg as binance
 from archondex.ethplorer import get_balance
-from tokens import *
-from config_assets import asset_syms
+from archondex.tokens import *
+from archondex.config_assets import asset_syms
 
 import requests
 import json
@@ -166,12 +166,25 @@ class Marketmaker:
             print (fill)
     
     def fetch_balances(self):
-        self.balances = get_balance(self.myaddr)        
+        self.balances = get_balance(self.myaddr)
+        return self.balances
 
     def show_bal(self):
         bal = get_balance(self.myaddr)        
         for k,v in bal.items():
-            print (k,":",v)         
+            print (k,":",v)   
+
+    def fetch_orders(self):
+        orders = radar.get_orders(address = self.myaddr)
+        open_orders = list(filter(lambda x: x["state"]=='OPEN',orders))
+        print (open_orders)
+        return open_orders
+
+    def fetch_tx(self):
+        fills = radar.get_fills(address = self.myaddr)
+        #maker_fills = list(filter(lambda x: x["makerAddress"]==myaddr,fills))        
+        return fills
+
 
     def show_open_orders(self):
         print ("show_open_orders")

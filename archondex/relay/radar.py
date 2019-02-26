@@ -36,12 +36,13 @@ base_url = "https://api.radarrelay.com/v2/"
 
 exchangeAddress = "0x4f833a24e1f95d70f028921e27040ca56e09ab0b"
 
+#public
 def get_orders(address):    
     response = requests.get("%s/accounts/%s/orders"%(base_url,address))
     orders = json.loads(response.text)
     return orders
 
-def get_fills_page(address, page):
+def _get_fills_page(address, page):
     params = {"perPage": 100, "page": page}
     response = requests.get("%s/accounts/%s/fills"%(base_url,address),params=params)
     #print (response.text)    
@@ -49,6 +50,7 @@ def get_fills_page(address, page):
     fills = json.loads(response.text)
     return fills
 
+#public
 def get_fills(address):
     fills = list()
     for i in range(0,10):
@@ -59,7 +61,6 @@ def get_fills(address):
         else:
             break
     return fills
-
 
 def bytes_to_hexstring(value) -> str:
     if isinstance(value, bytes) or isinstance(value, bytearray):
@@ -136,22 +137,6 @@ def submit_order(acct, order):
     return response
 
 """
-#WIP
-
-def _order_tuple(order):
-    return ()
-    return (order.maker.address,
-            order.taker.address,
-            order.fee_recipient.address,
-            order.sender.address,
-            order.pay_amount.value,
-            order.buy_amount.value,
-            order.maker_fee.value,
-            order.taker_fee.value,
-            order.expiration,
-            order.salt,
-            hexstring_to_bytes(order.pay_asset.serialize()),
-            hexstring_to_bytes(order.buy_asset.serialize()))
 
 def cancel_order(order):
     ORDER_INFO_TYPE = '(address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,bytes,bytes)'
@@ -161,6 +146,3 @@ def cancel_order(order):
     request = bytes_to_hexstring(method_signature + method_parameters)
     print (request)
 """    
-
-
-#cancel_order(None)
