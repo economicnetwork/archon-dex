@@ -1,10 +1,13 @@
 # archon dex
 
-basic client to trade with relays
+basic client to trade with relays (Radar)
 
-## Radarrelay
+requirements:
+* zerox utils
+* web3py
 
-* submit order
-* TODO: cancel order, get orderbook, balance
+export PYTHONPATH=:/Users/x/github/web3.py:/Users/x/archon
 
-requirements: TODO (pymaker, zerox utils, web3py)
+## CLI
+
+python3 cli.py balances

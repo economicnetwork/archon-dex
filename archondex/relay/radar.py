@@ -11,26 +11,19 @@ export INFURA_KEY=""
 submit order to radar with web3py and infura
 """
 
-#from zero_ex.order_utils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
-from archondex.zerox.orderutils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
-
-
-#from pymaker.sign import to_vrs
-#from pymaker.util import bytes_to_hexstring, hexstring_to_bytes, http_response_summary
-#from pymaker import Address
-
-from web3 import Web3, HTTPProvider
-from eth_account.messages import defunct_hash_message
-from eth_abi import encode_single, encode_abi, decode_single
-
-import requests
-from typing import cast, Dict, NamedTuple, Tuple
-#from solc import compile_source
-
 import os
 import copy
 import json
 import time
+import requests
+from web3 import Web3, HTTPProvider
+from eth_account.messages import defunct_hash_message
+from eth_abi import encode_single, encode_abi, decode_single
+from typing import cast, Dict, NamedTuple, Tuple
+
+#from zero_ex.order_utils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
+from archondex.zerox.orderutils import generate_order_hash_hex, Order, jsdict_order_to_struct, order_to_jsdict
+
 
 base_url = "https://api.radarrelay.com/v2/"
 
@@ -129,9 +122,8 @@ def prepare_order(acct, order):
 def submit_order(acct, order):
     print ("submit ",order)
     [otype, symbol, price, qty] = order
-    dict_order = request_order(otype, symbol, price, qty) 
-    js_order = prepare_order(acct, dict_order)    
-    print ("submitting >>>> ", js_order)
+    dict_order = request_order(otype, symbol, price, qty)
+    js_order = prepare_order(acct, dict_order)
     response = requests.post(base_url + "orders", js_order, timeout=10.0)
     #response is empty
     return response

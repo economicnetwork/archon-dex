@@ -1,5 +1,5 @@
 """
-export PYTHONPATH=/Users/x/0x/pymaker:/Users/x/0x/pyexchange
+export PYTHONPATH=/Users/x/0x/pyexchange
 export PRIVATEKEY='0x';
 export INFURA_KEY='...';
 """

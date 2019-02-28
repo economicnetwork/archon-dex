@@ -2,7 +2,7 @@
 utility to analyse maker-transactions on 0x
 """
 
-from archondex.relay.radar import *
+import archondex.relay.radar import radar
 from archondex.binance_utils import *
 import requests
 import json
@@ -41,7 +41,7 @@ def get_maker_fills_volume(address):
     print ('volume maker analysis for ' + address)
     eth_usd_map = get_ethusd_map()
     
-    fills = get_fills(address = address)
+    fills = radar.get_fills(address = address)
     maker_fills = list(filter(lambda x: x["makerAddress"]==address,fills))
     print (len(maker_fills))
     
