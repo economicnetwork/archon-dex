@@ -1,6 +1,7 @@
 # archon dex
 
-basic client to trade with relays (Radar)
+archon is a trading framework to trade with Central and Decentral exchanges. Archondex
+allows to trade on 0x, in particular Radar-relay. Other relays can be supported in principle.
 
 requirements:
 * zerox utils
